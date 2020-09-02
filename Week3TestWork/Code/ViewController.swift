@@ -60,6 +60,7 @@ class ViewController: UIViewController {
     private func start() {
         let mainThread = DispatchQueue.main
         let conCurrentQueue = DispatchQueue(label: "concurrent", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .workItem, target: nil)
+        //асинхронный поток
         conCurrentQueue.async {
             let startTime = Date()
             let result = self.bruteForce(startString: "0000", endString: "ZZZZ")
