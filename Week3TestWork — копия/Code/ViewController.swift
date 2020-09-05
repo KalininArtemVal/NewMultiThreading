@@ -59,16 +59,17 @@ class ViewController: UIViewController {
     
     private func start() {
         let mainThread = DispatchQueue.main
-        let conCurrentQueue = DispatchQueue(label: "concurrent", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .workItem, target: nil)
-        conCurrentQueue.async {
+        DispatchQueue.global(qos: .utility).async {
             let startTime = Date()
             let result = self.bruteForce(startString: "0000", endString: "ZZZZ")
             mainThread.async {
                 self.stop(password: result ?? "Error", startTime: startTime)
             }
-            
         }
-        
+//        let conCurrentQueue = DispatchQueue(label: "concurrent", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .workItem, target: nil)
+        //асинхронный поток
+//        conCurrentQueue.async {     
+//        }
     }
     
     // Возвращает подобранный пароль
