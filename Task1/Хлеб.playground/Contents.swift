@@ -24,12 +24,12 @@ public struct Bread {
     }
 }
 
-struct BreadStorage {
-    var storage = [Bread]()
-    var conditional = NSCondition()
-    var avalible = false
+class BreadStorage {
+    private var storage = [Bread]()
+    private var conditional = NSCondition()
+    private var avalible = false
     
-    mutating func push() {
+    func push() {
         conditional.lock()
         let bread = Bread.make()
         storage.append(bread)
@@ -39,7 +39,7 @@ struct BreadStorage {
         conditional.unlock()
     }
     
-    mutating func pop() {
+    func pop() {
         while !avalible {
             print("жду")
             conditional.wait()
@@ -50,9 +50,9 @@ struct BreadStorage {
     }
 }
 
+var storage = BreadStorage()
+
 class ParentThread: Thread {
-    var bread = BreadStorage()
-    
     override func main() {
         let myTimer = Timer(timeInterval: 2, target: self, selector: #selector(pushInThread), userInfo: nil, repeats: true)
         RunLoop.current.add(myTimer, forMode: RunLoop.Mode.common)
@@ -61,11 +61,10 @@ class ParentThread: Thread {
     }
     
     @objc func pushInThread() {
-        self.bread.push()
+        storage.push()
     }
 }
 class WorkingThread: Thread {
-    
     override func main() {
         let mySecondTimer = Timer(timeInterval: 0 , target: self, selector: #selector(popInThread), userInfo: nil, repeats: true)
         RunLoop.current.add(mySecondTimer, forMode: RunLoop.Mode.common)
@@ -74,7 +73,7 @@ class WorkingThread: Thread {
     }
     
     @objc func popInThread() {
-        parentThread.bread.pop()
+        storage.pop()
     }
 }
 
