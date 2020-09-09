@@ -50,9 +50,13 @@ class BreadStorage {
     }
 }
 
-var storage = BreadStorage()
-
 class ParentThread: Thread {
+    
+    private let storage: BreadStorage
+    init(storage: BreadStorage) {
+        self.storage = storage
+    }
+    
     override func main() {
         let myTimer = Timer(timeInterval: 2, target: self, selector: #selector(pushInThread), userInfo: nil, repeats: true)
         RunLoop.current.add(myTimer, forMode: RunLoop.Mode.common)
@@ -65,6 +69,12 @@ class ParentThread: Thread {
     }
 }
 class WorkingThread: Thread {
+    
+    private let storage: BreadStorage
+    init(storage: BreadStorage) {
+        self.storage = storage
+    }
+    
     override func main() {
         let mySecondTimer = Timer(timeInterval: 0 , target: self, selector: #selector(popInThread), userInfo: nil, repeats: true)
         RunLoop.current.add(mySecondTimer, forMode: RunLoop.Mode.common)
@@ -78,9 +88,10 @@ class WorkingThread: Thread {
 }
 
 
+var storage = BreadStorage()
 
-let parentThread = ParentThread()
-let workingThread = WorkingThread()
+let parentThread = ParentThread(storage: storage)
+let workingThread = WorkingThread(storage: storage)
 parentThread.start()
 workingThread.start()
 
