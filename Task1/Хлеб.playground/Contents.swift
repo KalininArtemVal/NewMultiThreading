@@ -78,7 +78,7 @@ class WorkingThread: Thread {
     override func main() {
         let mySecondTimer = Timer(timeInterval: 0 , target: self, selector: #selector(popInThread), userInfo: nil, repeats: true)
         RunLoop.current.add(mySecondTimer, forMode: RunLoop.Mode.common)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 20))
+        RunLoop.current.run()
         print("ЗАКОНЧИЛ")
     }
     
