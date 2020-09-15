@@ -28,6 +28,9 @@ class BreadStorage {
     private var storage = [Bread]()
     private var conditional = NSCondition()
     private var avalible = false
+    var count: Int {
+        return storage.count
+    }
     
     func push() {
         conditional.lock()
@@ -40,6 +43,7 @@ class BreadStorage {
     }
     
     func pop() {
+        
         while !avalible {
             print("жду")
             conditional.wait()
@@ -76,14 +80,11 @@ class WorkingThread: Thread {
     }
     
     override func main() {
-        let mySecondTimer = Timer(timeInterval: 0 , target: self, selector: #selector(popInThread), userInfo: nil, repeats: true)
-        RunLoop.current.add(mySecondTimer, forMode: RunLoop.Mode.common)
-        RunLoop.current.run()
-        print("ЗАКОНЧИЛ")
-    }
-    
-    @objc func popInThread() {
-        storage.pop()
+        
+        while parentThread.isExecuting || storage.count > 0 {
+            storage.pop()
+        }
+        print("Мы тоже закончили")
     }
 }
 
