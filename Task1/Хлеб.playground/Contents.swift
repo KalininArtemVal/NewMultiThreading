@@ -80,12 +80,15 @@ class WorkingThread: Thread {
     }
     
     override func main() {
+            let myTimer = Timer(timeInterval: 0, target: self, selector: #selector(popInThread), userInfo: nil, repeats: true)
+            RunLoop.current.add(myTimer, forMode: RunLoop.Mode.common)
+            RunLoop.current.run()
+            Thread.sleep(forTimeInterval: 5)
+        }
         
-        while parentThread.isExecuting || storage.count > 0 {
+        @objc func popInThread() {
             storage.pop()
         }
-        print("Мы тоже закончили")
-    }
 }
 
 
@@ -95,4 +98,6 @@ let parentThread = ParentThread(storage: storage)
 let workingThread = WorkingThread(storage: storage)
 parentThread.start()
 workingThread.start()
-
+sleep(25)
+parentThread.cancel()
+workingThread.cancel()
