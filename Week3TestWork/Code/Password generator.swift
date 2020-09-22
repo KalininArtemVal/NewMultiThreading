@@ -9,7 +9,7 @@ import Foundation
 
 class PasswordGenerator {
     
-    //Возвращает рандомно сренерированную строку заданной длины
+    //Возвращает рандомно сгенерированную строку заданной длины
     func randomString(length: Int) -> String {
         
         let letters = Consts.joinedString as NSString
