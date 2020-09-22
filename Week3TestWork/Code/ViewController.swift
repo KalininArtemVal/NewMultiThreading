@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     
     
     
-//    let secondpassWordGeneration = PassWordGenerationSecond(password: "", characterArray: Consts.characterArray)
+    //    let secondpassWordGeneration = PassWordGenerationSecond(password: "", characterArray: Consts.characterArray)
     let queue = OperationQueue()
     
     override func viewDidLoad() {
@@ -66,48 +66,40 @@ class ViewController: UIViewController {
     }
     
     private func start() {
-        let startIndexOperation = StartIndexOperation(password: self.password, characterArray: Consts.characterArray)
-        let endIndexOperation = EndIndexOperation(password: self.password, characterArray: Consts.characterArray)
+        let startIndexOperation = StartIndexOperation(password: self.password, startString: "0000")
+        let endIndexOperation = EndIndexOperation(password: self.password, endString: "ZZZZ")
         var result: String?
-        
-        let findPassWithStartIndex = BlockOperation {
-            let startTime = Date()
-            result = startIndexOperation.bruteForce(startString: "0000")
-            print("1\(Thread.current)")
-            DispatchQueue.main.async {
-                self.stop(password: result ?? "Error", startTime: startTime)
+        let startTime = Date()
+        // В этой операции мы прогоняем циклом индексы в одну сторону. Т.е. проверка проводится [0,0,0,1]
+        startIndexOperation.completionBlock = {
+            //если операция не отменена то выводится результат startIndexOperation
+            if !(startIndexOperation.isCancelled) {
+                result = startIndexOperation.correctPassword
+                DispatchQueue.main.async {
+                    self.stop(password: result ?? "Error", startTime: startTime)
+                }
+                //прерывает все опарции если пароль был найдет
+                self.queue.cancelAllOperations()
             }
         }
-
-        let findPassWithEndIndex = BlockOperation {
-            let startTime = Date()
-            result = endIndexOperation.bruteForce(endString: "ZZZZ")
-            print("2\(Thread.current)")
-            DispatchQueue.main.async {
-                self.stop(password: result ?? "Error", startTime: startTime)
+        // Здесь мы прогоняем индексы в другую. Т.е. проверка проводится [1,0,0,0]
+        endIndexOperation.completionBlock = {
+            //если операция не отменена то выводится результат endIndexOperation
+            if !(endIndexOperation.isCancelled) {
+                result = endIndexOperation.correctPassword
+                DispatchQueue.main.async {
+                    self.stop(password: result ?? "Error", startTime: startTime)
+                }
+                //прерывает все опарции если пароль был найдет
+                self.queue.cancelAllOperations()
             }
         }
-        
-        DispatchQueue.global().async {
-            findPassWithStartIndex.start()
-            if findPassWithStartIndex.isFinished == true {
-                findPassWithStartIndex.cancel()
-                findPassWithEndIndex.cancel()
-                
-            }
-        }
-        DispatchQueue.global().async {
-            findPassWithEndIndex.start()
-            if findPassWithEndIndex.isFinished == true {
-                findPassWithEndIndex.cancel()
-                findPassWithStartIndex.cancel()
-            }
-        }
+        //Пускаем в параллельный поток
+        queue.addOperations([startIndexOperation, endIndexOperation], waitUntilFinished: false)
     }
-
+    
     //Обновляем UI
     private func stop(password: String, startTime: Date) {
-        
         indicator.stopAnimating()
         enableStartButton()
         indicator.isHidden = true
