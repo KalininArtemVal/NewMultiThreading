@@ -11,8 +11,7 @@ import UIKit
 import DataProvider
 
 //MARK: - Followed/Following (Подписки/Подписчики Текущего пользователя)
-let followedByUser = currentUserFollowers
-let followingUser = currentUserFollowing
+
 
 
 //MARK: - Table View (Таблица)
@@ -25,6 +24,7 @@ class FollowedByUser: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(friends)
         title = mainTitle
         tableView.delegate = self
         tableView.dataSource = self

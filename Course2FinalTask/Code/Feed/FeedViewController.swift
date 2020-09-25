@@ -16,10 +16,8 @@ var usersLikesPostArray = [User]()
 let post = DataProviders.shared.postsDataProvider
 var lookingUser: User?
 
-
 var feedReturnWithOutNill = [Post]()
 let queueUtility = DispatchQueue.global(qos: .utility)
-
 
 //MARK: - Feed (Лента)
 class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -51,7 +49,6 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 self.activeIndicator.isHidden = true
                 feedReturnWithOutNill = feedReturn ?? []
-                print(feedReturnWithOutNill)
                 self.feedCollectionView.reloadData()
             }
         }
@@ -82,7 +79,6 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
 extension FeedViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(feedReturnWithOutNill)
         return feedReturnWithOutNill.count //arrayOfPostsWithoutNil
     }
     
