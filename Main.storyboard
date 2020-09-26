@@ -435,18 +435,62 @@
         <!--Filters-->
         <scene sceneID="Cvz-dT-KSb">
             <objects>
-                <viewController id="0ju-qo-yph" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectFiltersViewController" id="0ju-qo-yph" customClass="SelectFiltersViewController" customModule="Course2FinalTask" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2dn-Em-TO6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xKk-4h-huh">
+                                <rect key="frame" x="0.0" y="88" width="414" height="386"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="414" id="T8y-Y2-Ncb"/>
+                                    <constraint firstAttribute="height" constant="386" id="frP-d0-X6s"/>
+                                </constraints>
+                            </imageView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ji4-wC-Nk2">
+                                <rect key="frame" x="0.0" y="482" width="414" height="130"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="130" id="QLs-Xu-U8Z"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Zsq-YB-5p9">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="q0y-xD-N2M">
+                                        <rect key="frame" x="0.0" y="1" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="F8K-fE-rJr">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="xKk-4h-huh" firstAttribute="top" secondItem="J3S-ME-gvd" secondAttribute="top" id="Cab-S3-6GC"/>
+                            <constraint firstItem="ji4-wC-Nk2" firstAttribute="trailing" secondItem="J3S-ME-gvd" secondAttribute="trailing" id="UfM-Ri-F4a"/>
+                            <constraint firstItem="ji4-wC-Nk2" firstAttribute="top" secondItem="xKk-4h-huh" secondAttribute="bottom" constant="8" id="bRa-5u-S1s"/>
+                            <constraint firstItem="ji4-wC-Nk2" firstAttribute="leading" secondItem="J3S-ME-gvd" secondAttribute="leading" id="nmG-W2-w0I"/>
+                            <constraint firstItem="xKk-4h-huh" firstAttribute="trailing" secondItem="J3S-ME-gvd" secondAttribute="trailing" id="oQ8-bM-c3I"/>
+                            <constraint firstItem="xKk-4h-huh" firstAttribute="leading" secondItem="J3S-ME-gvd" secondAttribute="leading" id="tEh-J0-tY0"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="J3S-ME-gvd"/>
                     </view>
                     <navigationItem key="navigationItem" title="Filters" id="F4D-hU-iHD"/>
+                    <connections>
+                        <outlet property="collectionView" destination="ji4-wC-Nk2" id="5ow-Ui-v11"/>
+                        <outlet property="userImage" destination="xKk-4h-huh" id="sQv-sx-Kaf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QiX-B2-rge" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2236" y="1291"/>
+            <point key="canvasLocation" x="2234.7826086956525" y="1289.7321428571429"/>
         </scene>
         <!--Feed-->
         <scene sceneID="k3t-Hg-FEd">

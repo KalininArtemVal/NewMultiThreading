@@ -31,8 +31,10 @@ class NewPostViewController: UIViewController {
         layout.minimumLineSpacing = 0
         collectionView.setCollectionViewLayout(layout, animated: true)
     }
+    
+    
 }
-
+//MARK: - Коллекция
 extension NewPostViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
@@ -44,11 +46,25 @@ extension NewPostViewController: UICollectionViewDelegate, UICollectionViewDataS
         cell.configue(with: post)
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if #available(iOS 13.0, *) {
+            guard let vc = storyboard?.instantiateViewController(identifier: SelectFiltersViewController.identifire) as? SelectFiltersViewController else { return }
+            let image = photos[indexPath.row]
+            vc.selectedImage = image
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            // Fallback on earlier versions
+        }
+           
+           
+       }
 }
 
 
+
+//MARK: - Констрейнты
 extension NewPostViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
@@ -56,4 +72,5 @@ extension NewPostViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.size.width/3.0, height: UIScreen.main.bounds.size.width/3.0)
     }
+    
 }
