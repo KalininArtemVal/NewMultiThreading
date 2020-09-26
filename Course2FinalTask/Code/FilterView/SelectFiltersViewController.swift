@@ -87,7 +87,10 @@ extension SelectFiltersViewController: UICollectionViewDelegate, UICollectionVie
         return cell
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let filter = filters[indexPath.row]
+        userImage.image = filter.image
+    }
     
 }
 

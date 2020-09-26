@@ -41,9 +41,15 @@ class UseFilter {
         guard let ciimage = CIImage(image: originalImage) else {return nil}
         return applyFilter(name: "CISepiaTone", parametr: [kCIInputImageKey: ciimage])
     }
-    //3 Blur
-    public func doBlurFilter(originalImage: UIImage) -> UIImage? {
+    //4 Blur
+    public func doTonalFilter(originalImage: UIImage) -> UIImage? {
         guard let ciimage = CIImage(image: originalImage) else {return nil}
-        return applyFilter(name: "CIBoxBlur", parametr: [kCIInputImageKey: ciimage])
+        return applyFilter(name: "CIPhotoEffectTonal", parametr: [kCIInputImageKey: ciimage])
+    }
+    
+    //5 Transfer
+    public func doTransferFilter(originalImage: UIImage) -> UIImage? {
+        guard let ciimage = CIImage(image: originalImage) else {return nil}
+        return applyFilter(name: "CIPhotoEffectTransfer", parametr: [kCIInputImageKey: ciimage])
     }
 }
