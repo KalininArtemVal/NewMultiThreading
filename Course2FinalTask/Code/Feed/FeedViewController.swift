@@ -68,9 +68,9 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
         feedCollectionView.collectionViewLayout = layout
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        feedCollectionView.reloadData()
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        feedCollectionView.reloadData()
+//    }
 }
 
 

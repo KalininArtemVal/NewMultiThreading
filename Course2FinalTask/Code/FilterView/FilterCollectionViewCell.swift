@@ -14,12 +14,14 @@ class FilterCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var filterLable: UILabel!
     @IBOutlet weak var filterImage: UIImageView!
     static let identifire = "FilterCollectionViewCell"
-
+    let activityIndicatorCurrent = UIActivityIndicatorView()
+    static var indicatorIsActive = true
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         filterImage.contentMode = .scaleAspectFit
-        // Initialization code
     }
+    
     
     public func configue(image: UIImage, filter: String) {
         filterImage.image = image
