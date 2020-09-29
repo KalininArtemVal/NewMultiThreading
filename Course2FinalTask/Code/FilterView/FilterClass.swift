@@ -48,6 +48,7 @@ var newImage5 = UIImage()
 //функции по выбору фильтров
 //1 Noir
 public func doNoirFilter(originalImage: UIImage, collection: UICollectionView, view: UIView) -> UIImage? {
+    
     guard let ciimage = CIImage(image: originalImage) else {return nil}
     let useeFilter = UseFilter(nameFilter: "CIPhotoEffectNoir", parametr: [kCIInputImageKey: ciimage])
     queue.addOperations([useeFilter], waitUntilFinished: false)

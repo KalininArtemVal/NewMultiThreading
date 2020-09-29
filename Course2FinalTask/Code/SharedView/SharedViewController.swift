@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DataProvider
 
 class SharedViewController: UIViewController {
     
@@ -16,16 +17,34 @@ class SharedViewController: UIViewController {
     static let identifire = "SharedViewController"
     
     var sharedImage = UIImage()
+    var sharedPost: Post?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setSharedImage()
-//        sharedImageView.image = sharedImage
     }
     
     func setSharedImage() {
-//        guard let image = sharedImage else {return}
-        
         sharedImageView.image = sharedImage
+        
+    }
+    
+    @IBAction func unwindToFeed( _ sender: UIStoryboardSegue) {
+        print("Goo")
+    }
+    
+    @IBAction func shredButton(_ sender: Any) {
+        print("hhh")
+        sharedTextField.text = ""
+        dismiss(animated: true, completion: nil)
+        
+        
+        post.newPost(with: sharedImage, description: sharedTextField.text ?? "", queue: DispatchQueue.global()) { (post) in
+            guard post != nil else {return}
+            DispatchQueue.main.async {
+                self.sharedPost = post
+            }
+        }
+        
     }
 }

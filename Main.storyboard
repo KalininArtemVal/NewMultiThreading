@@ -301,7 +301,7 @@
         <!--Feed-->
         <scene sceneID="9aG-Co-OX7">
             <objects>
-                <viewController id="rS8-gP-3tA" customClass="FeedViewController" customModule="Course2FinalTask" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FeedViewController" id="rS8-gP-3tA" customClass="FeedViewController" customModule="Course2FinalTask" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Yee-uF-lDd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -529,10 +529,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Drn-5E-jWf">
-                                <rect key="frame" x="16" y="265" width="378" height="34"/>
+                                <rect key="frame" x="16" y="265" width="382" height="34"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="Drn-5E-jWf" secondAttribute="height" multiplier="189:17" id="eYN-jP-IAp"/>
-                                    <constraint firstAttribute="height" constant="34" id="sa0-JM-ONG"/>
+                                    <constraint firstAttribute="height" constant="34" id="s2g-3W-t5u"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -541,15 +540,24 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="2PL-Hz-Ag5" firstAttribute="top" secondItem="f4i-oI-Dgh" secondAttribute="top" constant="16" id="Is9-Rx-BG1"/>
+                            <constraint firstItem="f4i-oI-Dgh" firstAttribute="trailing" secondItem="Drn-5E-jWf" secondAttribute="trailing" constant="16" id="P5J-TJ-fMS"/>
+                            <constraint firstItem="Drn-5E-jWf" firstAttribute="top" secondItem="uCg-gs-Ybt" secondAttribute="bottom" constant="8" id="T1P-yQ-cqJ"/>
                             <constraint firstItem="uCg-gs-Ybt" firstAttribute="leading" secondItem="f4i-oI-Dgh" secondAttribute="leading" constant="16" id="Ul1-jX-hcS"/>
                             <constraint firstItem="uCg-gs-Ybt" firstAttribute="top" secondItem="2PL-Hz-Ag5" secondAttribute="bottom" constant="32" id="VzF-rE-v2o"/>
-                            <constraint firstItem="Drn-5E-jWf" firstAttribute="leading" secondItem="f4i-oI-Dgh" secondAttribute="leading" constant="16" id="eBA-Y8-Wlw"/>
+                            <constraint firstItem="Drn-5E-jWf" firstAttribute="leading" secondItem="f4i-oI-Dgh" secondAttribute="leading" constant="16" id="YPe-Sh-pDU"/>
                             <constraint firstItem="2PL-Hz-Ag5" firstAttribute="leading" secondItem="f4i-oI-Dgh" secondAttribute="leading" constant="16" id="oRW-dY-MQW"/>
-                            <constraint firstItem="Drn-5E-jWf" firstAttribute="top" secondItem="uCg-gs-Ybt" secondAttribute="bottom" constant="8" id="yiH-AL-bYF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="f4i-oI-Dgh"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Cqx-N3-WWq"/>
+                    <navigationItem key="navigationItem" id="Cqx-N3-WWq">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="MgK-F4-JCB">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oWH-hS-D7Y">
+                                <rect key="frame" x="-23" y="-15" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="sharedImageView" destination="2PL-Hz-Ag5" id="yEU-sB-fMP"/>
                         <outlet property="sharedTextField" destination="Drn-5E-jWf" id="HA5-Eb-Z9O"/>

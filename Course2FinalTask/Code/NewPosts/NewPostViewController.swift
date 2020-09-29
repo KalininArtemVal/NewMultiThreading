@@ -12,6 +12,7 @@ import DataProvider
 let photosData = DataProviders.shared.photoProvider
 let photos = photosData.photos()
 
+
 class NewPostViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -56,9 +57,7 @@ extension NewPostViewController: UICollectionViewDelegate, UICollectionViewDataS
         } else {
             // Fallback on earlier versions
         }
-           
-           
-       }
+    }
 }
 
 

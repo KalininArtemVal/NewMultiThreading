@@ -10,6 +10,7 @@ import UIKit
 import DataProvider
 
 
+
 class SelectFiltersViewController: UIViewController {
     
     @IBOutlet weak var userImage: UIImageView!
@@ -29,6 +30,7 @@ class SelectFiltersViewController: UIViewController {
         indicator()
         setImage()
         setLayout()
+//        findImage()
         collectionView.register(FilterCollectionViewCell.nib(), forCellWithReuseIdentifier: FilterCollectionViewCell.identifire)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -60,6 +62,14 @@ class SelectFiltersViewController: UIViewController {
         userImage.image = selectedImage
         userImage.contentMode = .scaleAspectFill
     }
+    
+//    func findImage() {
+//        for i in thumbnailPhotos {
+//            if i == selectedImage {
+//                print("Find")
+//            }
+//        }
+//    }
 }
 
 extension SelectFiltersViewController: UICollectionViewDelegate, UICollectionViewDataSource {

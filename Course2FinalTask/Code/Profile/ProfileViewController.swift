@@ -48,6 +48,7 @@ class ProfileViewController: UIViewController {
     }
     
     var arrayOfCurrentPostUnwrapped = [Post]()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,10 +150,10 @@ class ProfileViewController: UIViewController {
 }
 
 extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return postsOfCurrentUser.count
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "profileCell", for: indexPath) as? NewProfileCollectionViewCell else {fatalError("hogeCell not registered.")}
@@ -166,6 +167,8 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
         cell.configue(with: post.image)
         return cell
     }
+    
+
 }
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {

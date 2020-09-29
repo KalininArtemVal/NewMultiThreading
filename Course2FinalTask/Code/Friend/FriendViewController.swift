@@ -24,9 +24,11 @@ class FriendViewController: UIViewController {
     @IBOutlet var friendFollowingCount: UILabel!
     @IBOutlet weak var friendCollectionView: UICollectionView!
     
+    var friendIndicator = UIActivityIndicatorView()
+    var invisibleView = UIView()
+    
     var currentFriend: User?
     var unwrappedArrayOfFriendPost = [Post]()
-
     
     static let identifire = "FriendViewController"
     
@@ -34,6 +36,8 @@ class FriendViewController: UIViewController {
         super.viewDidLoad()
         setUser()
         setLayout()
+        getFriend()
+        indicator()
         friendCollectionView.reloadData()
         friendCollectionView.delegate = self
         friendCollectionView.dataSource = self
@@ -55,7 +59,7 @@ class FriendViewController: UIViewController {
         let vc = FollowedByUser()
         show(vc, sender: self)
     }
-    
+    // Устанавливаем Юзера на View
     func setUser() {
         guard let friend = currentFriend else {return}
         friendAvatar.image = friend.avatar
@@ -74,67 +78,93 @@ class FriendViewController: UIViewController {
         friendCollectionView.setCollectionViewLayout(layout, animated: true)
     }
     
+    func indicator() {
+        invisibleView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        invisibleView.backgroundColor = .white
+        friendIndicator.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        friendIndicator.center = self.invisibleView.center
+        friendIndicator.startAnimating()
+        invisibleView.addSubview(friendIndicator)
+        view.addSubview(invisibleView)
+    }
+    
+    //MARK: - FOLLOWERS
+    
+    // Передаем на экран подписчики друга массив с Followers или Following
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "friendFollowing", let currentUser = asyncCurrentUser {
+        if segue.identifier == "friendFollowing" {
             let destination = segue.destination as? FollowedByUser
-            user.usersFollowedByUser(with: currentUser.id, queue: DispatchQueue.global()) { (currentUserFollowers) in
-                guard currentUserFollowers != nil else {return}
+            guard let friend = currentFriend else {return}
+            user.usersFollowedByUser(with: friend.id, queue: DispatchQueue.global()) { (followers) in
+                guard followers != nil else {return}
+                DispatchQueue.main.async {
+                    self.invisibleView.isHidden = true
+                    currentUserFollowers = followers ?? []
+//                    self.invisibleView.isHidden = true
+//                    self.friendCollectionView.reloadData()
+                }
             }
             destination?.mainTitle = "Following"
             destination?.friends = currentUserFollowers
-        } else if segue.identifier == "friendFollowers", let currentUser = asyncCurrentUser {
+        } else if segue.identifier == "friendFollowers" {
             let destination = segue.destination as? FollowedByUser
-            user.usersFollowingUser(with: currentUser.id, queue: DispatchQueue.global()) { (currentUserFollowing) in
-                guard currentUserFollowing != nil else {return}
+            guard let friend = currentFriend else {return}
+            user.usersFollowingUser(with: friend.id, queue: DispatchQueue.global()) { (following) in
+                guard following != nil else {return}
+                DispatchQueue.main.async {
+                    self.invisibleView.isHidden = true
+                    currentUserFollowing = following ?? []
+//                    self.invisibleView.isHidden = true
+//                    self.friendCollectionView.reloadData()
+                }
             }
             destination?.mainTitle = "Followers"
             destination?.friends = currentUserFollowing
         }
     }
+    
+    //MARK: - FINDPOST
+    
+    //функция где мы достаем из DataProvider посты для ДРУГА
+    func getFriend() {
+        if let currentFriend = currentFriend {
+            //Если массив пуст, заполняем его
+            if unwrappedArrayOfFriendPost.isEmpty {
+                post.findPosts(by: currentFriend.id, queue: DispatchQueue.global()) { (arrayFriendPost) in
+                    guard arrayFriendPost != nil else {return}
+                    DispatchQueue.main.async {
+                        self.unwrappedArrayOfFriendPost = arrayFriendPost ?? []
+                        self.invisibleView.isHidden = true
+                        self.friendCollectionView.reloadData()
+                    }
+                }
+            } else {
+                //Если не пуст, удаляем из него все посты и заливаем новые во избежании ошибки "Index out of range"
+                unwrappedArrayOfFriendPost.removeAll()
+                post.findPosts(by: currentFriend.id, queue: DispatchQueue.global()) { (arrayFriendPost) in
+                    guard arrayFriendPost != nil else {return}
+                    DispatchQueue.main.async {
+                        self.unwrappedArrayOfFriendPost = arrayFriendPost ?? []
+                        self.invisibleView.isHidden = true
+                        self.friendCollectionView.reloadData()
+                    }
+                }
+            }
+        }
+    }
+    
+    
 }
 
 extension FriendViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let currentFriend = currentFriend {
-            let arrayOfCurrentFriendPost = [Post]()
-            post.findPosts(by: currentFriend.id, queue: DispatchQueue.global()) { (arrayOfCurrentFriendPost) in
-                guard arrayOfCurrentFriendPost != nil else {return}
-                
-            }
-            for i in arrayOfCurrentFriendPost {
-                unwrappedArrayOfFriendPost.append(i)
-            }
-        }
         return unwrappedArrayOfFriendPost.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "friendCell", for: indexPath) as? FriendCollectionViewCell else {return UICollectionViewCell()}
-        if unwrappedArrayOfFriendPost.isEmpty {
-            if let currentFriend = currentFriend {
-                let arrayOfCurrentFriendPost = [Post]()
-                post.findPosts(by: currentFriend.id, queue: DispatchQueue.global()) { (arrayOfCurrentFriendPost) in
-                    guard arrayOfCurrentFriendPost != nil else {return}
-                }
-                let currentFriend = arrayOfCurrentFriendPost[indexPath.row]
-                    cell.friendImageView.image = currentFriend.image
-                    return cell
-                
-            }
-        } else {
-            unwrappedArrayOfFriendPost.removeAll()
-            if let currentFriend = currentFriend {
-                let arrayOfCurrentFriendPost = [Post]()
-                    
-                post.findPosts(by: currentFriend.id, queue: DispatchQueue.global()) { (arrayOfCurrentFriendPost) in
-                    guard arrayOfCurrentFriendPost != nil else {return}
-                }
-                let currentFriend = arrayOfCurrentFriendPost[indexPath.row]
-                    cell.friendImageView.image = currentFriend.image
-                    return cell
-                
-            }
-        }
+        let aaa = self.unwrappedArrayOfFriendPost[indexPath.row]
+        cell.friendImageView.image = aaa.image
         return cell
     }
     
