@@ -23,11 +23,16 @@ class FriendViewController: UIViewController {
     @IBOutlet weak var friendFollowersCount: UILabel!
     @IBOutlet var friendFollowingCount: UILabel!
     @IBOutlet weak var friendCollectionView: UICollectionView!
+    @IBOutlet weak var followButtonLable: UIButton!
+    
     
     var friendIndicator = UIActivityIndicatorView()
     var invisibleView = UIView()
+    var lebleOfFollowButton = "1"
     
+    var currentUser: User?
     var currentFriend: User?
+    var followersToUnfollow = [User]()
     var unwrappedArrayOfFriendPost = [Post]()
     
     static let identifire = "FriendViewController"
@@ -38,6 +43,7 @@ class FriendViewController: UIViewController {
         setLayout()
         getFriend()
         indicator()
+        //        setFollowButton()
         friendCollectionView.reloadData()
         friendCollectionView.delegate = self
         friendCollectionView.dataSource = self
@@ -68,6 +74,8 @@ class FriendViewController: UIViewController {
         friendFollowersCount.text = String(friend.followedByCount)
         friendFollowingCount.text = String(friend.followsCount)
         title = friend.username
+        getFollower()
+        setFollowButton()
     }
     
     func setLayout() {
@@ -77,6 +85,8 @@ class FriendViewController: UIViewController {
         layout.minimumLineSpacing = 0
         friendCollectionView.setCollectionViewLayout(layout, animated: true)
     }
+    
+    
     
     func indicator() {
         invisibleView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
@@ -88,36 +98,48 @@ class FriendViewController: UIViewController {
         view.addSubview(invisibleView)
     }
     
-    //MARK: - FOLLOWERS
+    func setFollowButton() {
+        followButtonLable.backgroundColor = #colorLiteral(red: 0, green: 0.5882352941, blue: 1, alpha: 1)
+        followButtonLable.layer.cornerRadius = 6
+        followButtonLable.setTitle(lebleOfFollowButton, for: .normal)
+        if let friend = currentFriend {
+            print(friend.currentUserFollowsThisUser)
+            
+            if friend.currentUserFollowsThisUser == true {
+                followButtonLable.setTitle("UnFollow", for: .normal)
+            } else {
+                followButtonLable.setTitle("Follow", for: .normal)
+            }
+        }
+    }
     
+    func getFollower() {
+        guard let friend = currentFriend else {return}
+        user.usersFollowedByUser(with: friend.id, queue: DispatchQueue.global()) { (followers) in
+            guard followers != nil else {return}
+            DispatchQueue.main.async {
+                currentUserFollowers = followers ?? []
+                self.invisibleView.isHidden = true
+            }
+        }
+        user.usersFollowingUser(with: friend.id, queue: DispatchQueue.global()) { (following) in
+            guard following != nil else {return}
+            DispatchQueue.main.async {
+                currentUserFollowing = following ?? []
+            }
+        }
+    }
+    
+    
+    //MARK: - FOLLOWERS
     // Передаем на экран подписчики друга массив с Followers или Following
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "friendFollowing" {
             let destination = segue.destination as? FollowedByUser
-            guard let friend = currentFriend else {return}
-            user.usersFollowedByUser(with: friend.id, queue: DispatchQueue.global()) { (followers) in
-                guard followers != nil else {return}
-                DispatchQueue.main.async {
-                    self.invisibleView.isHidden = true
-                    currentUserFollowers = followers ?? []
-//                    self.invisibleView.isHidden = true
-//                    self.friendCollectionView.reloadData()
-                }
-            }
             destination?.mainTitle = "Following"
             destination?.friends = currentUserFollowers
         } else if segue.identifier == "friendFollowers" {
             let destination = segue.destination as? FollowedByUser
-            guard let friend = currentFriend else {return}
-            user.usersFollowingUser(with: friend.id, queue: DispatchQueue.global()) { (following) in
-                guard following != nil else {return}
-                DispatchQueue.main.async {
-                    self.invisibleView.isHidden = true
-                    currentUserFollowing = following ?? []
-//                    self.invisibleView.isHidden = true
-//                    self.friendCollectionView.reloadData()
-                }
-            }
             destination?.mainTitle = "Followers"
             destination?.friends = currentUserFollowing
         }
@@ -154,6 +176,27 @@ class FriendViewController: UIViewController {
     }
     
     
+    @IBAction func followButton(_ sender: Any) {
+        
+        guard let current = currentFriend else {return}
+        if followButtonLable.titleLabel?.text == "Follow" {
+            print("Aga")
+            user.follow(current.id, queue: DispatchQueue.global()) { (_) in
+                DispatchQueue.main.async {
+                    self.followButtonLable.setTitle("Unfollow", for: .normal)
+                    print("подписаться")
+                }
+            }
+        } else {
+            print("Net")
+            user.unfollow(current.id, queue: DispatchQueue.global()) { (_) in
+                DispatchQueue.main.async {
+                    self.followButtonLable.setTitle("Follow", for: .normal)
+                    print("отписаться")
+                }
+            }
+        }
+    }
 }
 
 extension FriendViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

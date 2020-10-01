@@ -267,26 +267,41 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9dG-my-Cp9">
+                                <rect key="frame" x="315.5" y="96" width="82.5" height="30"/>
+                                <color key="tintColor" red="0.93333597720000006" green="0.93333597720000006" blue="0.93333597720000006" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="followButton:" destination="35m-cl-f69" eventType="touchUpInside" id="P2k-7x-1bV"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="9dG-my-Cp9" firstAttribute="top" secondItem="4Jj-tn-1gy" secondAttribute="top" constant="8" id="3wK-B3-ojw"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="trailing" secondItem="4Jj-tn-1gy" secondAttribute="trailing" id="4XC-bi-J4z"/>
                             <constraint firstAttribute="bottom" secondItem="LdI-Ck-YCu" secondAttribute="bottom" id="Rsu-ca-UjB"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="leading" secondItem="4Jj-tn-1gy" secondAttribute="leading" id="XL9-Hl-Fji"/>
                             <constraint firstItem="AdD-MZ-JJY" firstAttribute="top" secondItem="4Jj-tn-1gy" secondAttribute="top" constant="8" id="ZmS-Ib-YeC"/>
                             <constraint firstItem="4Jj-tn-1gy" firstAttribute="trailing" secondItem="t04-9x-HCb" secondAttribute="trailing" constant="16" id="aJQ-Wx-X1o"/>
+                            <constraint firstItem="9dG-my-Cp9" firstAttribute="leading" secondItem="UGC-Be-hEv" secondAttribute="leading" id="fMd-me-loa"/>
                             <constraint firstItem="AdD-MZ-JJY" firstAttribute="leading" secondItem="iYs-fR-s8b" secondAttribute="trailing" constant="8" id="fiJ-ZR-TMm"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="top" secondItem="t04-9x-HCb" secondAttribute="bottom" constant="8" id="hAe-jX-P0p"/>
                             <constraint firstItem="iYs-fR-s8b" firstAttribute="top" secondItem="4Jj-tn-1gy" secondAttribute="top" constant="8" id="iAp-Ao-Bop"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="top" secondItem="cYY-tR-z87" secondAttribute="bottom" constant="8" id="m6r-0K-eLZ"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="top" secondItem="iYs-fR-s8b" secondAttribute="bottom" constant="8" id="ouv-b5-zBp"/>
+                            <constraint firstItem="4Jj-tn-1gy" firstAttribute="trailing" secondItem="9dG-my-Cp9" secondAttribute="trailing" constant="16" id="pD1-nq-KzJ"/>
                             <constraint firstItem="iYs-fR-s8b" firstAttribute="leading" secondItem="4Jj-tn-1gy" secondAttribute="leading" constant="8" id="pso-ya-kow"/>
+                            <constraint firstItem="9dG-my-Cp9" firstAttribute="top" secondItem="iYs-fR-s8b" secondAttribute="top" id="vKl-pZ-BTb"/>
                             <constraint firstItem="cYY-tR-z87" firstAttribute="leading" secondItem="iYs-fR-s8b" secondAttribute="trailing" constant="8" id="vxf-Gv-gj5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4Jj-tn-1gy"/>
                     </view>
                     <navigationItem key="navigationItem" title="useName" id="dX5-ON-QGX"/>
                     <connections>
+                        <outlet property="followButtonLable" destination="9dG-my-Cp9" id="KZd-Ce-64x"/>
                         <outlet property="friendAvatar" destination="iYs-fR-s8b" id="bPT-fo-s8Y"/>
                         <outlet property="friendCollectionView" destination="LdI-Ck-YCu" id="qjg-5J-v4X"/>
                         <outlet property="friendFollowersCount" destination="hNm-Ge-4Q7" id="xS8-XK-wyM"/>
@@ -552,10 +567,17 @@
                     <navigationItem key="navigationItem" id="Cqx-N3-WWq">
                         <barButtonItem key="rightBarButtonItem" style="plain" id="MgK-F4-JCB">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oWH-hS-D7Y">
-                                <rect key="frame" x="-23" y="-15" width="92" height="30"/>
+                                <rect key="frame" x="302" y="7" width="92" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="shredButton:" destination="xIq-Pl-so9" eventType="touchUpInside" id="CrL-DS-JUp"/>
+                                    <action selector="unwindToFeed:" destination="xIq-Pl-so9" eventType="touchUpInside" id="B5I-7z-tWR"/>
+                                </connections>
                             </button>
+                            <connections>
+                                <segue destination="WUG-Jr-vxh" kind="unwind" unwindAction="unwindToFeed:" id="GpX-WO-uW2"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -564,6 +586,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6zh-TS-bYr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="WUG-Jr-vxh" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3175.36231884058" y="1292.4107142857142"/>
         </scene>
@@ -608,7 +631,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="coc-l4-3Ol"/>
-        <segue reference="u14-nR-sYO"/>
+        <segue reference="NfC-oB-lsA"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="feed" width="25" height="25"/>

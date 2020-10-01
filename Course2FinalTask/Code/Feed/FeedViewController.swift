@@ -9,6 +9,10 @@
 import UIKit
 import DataProvider
 
+//MARK: - Followers
+var youAreFollowed = [User]()
+
+
 //MARK: - вызываем post
 
 var feedReturn = [Post]()
@@ -27,6 +31,7 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var activeIndicator: UIActivityIndicatorView!
     @IBOutlet weak var feedCollectionView: UICollectionView!
     
+    var unwrapdeArrayOfLikesByUsers = [User]()
     var userOfCurrentPost: User?
     var following = [User]()
     var follwed = [User]()
@@ -35,8 +40,8 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         getFeed()
+        getUser()
         setLayout()
-        getFollowers()
         activIndicator()
         feedCollectionView.dataSource = self
         feedCollectionView.delegate = self
@@ -71,44 +76,21 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
         feedCollectionView.collectionViewLayout = layout
     }
     
-    
-    func getFollowers() {
+    //вытаскиваем текущего пользователя
+    func getUser() {
         user.currentUser(queue: DispatchQueue.global()) { (getuser) in
             guard getuser != nil else {return}
-            DispatchQueue.main.async {
-                self.curUser = getuser
+            self.curUser = getuser
+            guard let currentUser = self.curUser else {return}
+            //вытаскиваем подписчиков текущего пользователя
+            user.usersFollowedByUser(with: currentUser.id, queue: DispatchQueue.global()) { (users) in
+                guard users != nil else {return}
+                DispatchQueue.main.async {
+                    youAreFollowed = users ?? []
+                }
             }
         }
-        //        //вытаскиваем текущего пользователя
-        //        user.currentUser(queue: DispatchQueue.global()) { (getuser) in
-        //            guard getuser != nil else {return}
-        //            DispatchQueue.main.async {
-        //                self.curUser = getuser
-        //            }
-        //        }
-        //        //Вытаскиваем follwed
-        //        guard let current = curUser else {return}
-        //        user.usersFollowedByUser(with: current.id, queue: DispatchQueue.global()) { (followers) in
-        //            guard followers != nil else {return}
-        //            DispatchQueue.main.async {
-        //                self.follwed = followers ?? []
-        //                print(self.follwed.count)
-        //            }
-        //        }
-        //        //Вытаскиваем following
-        //        user.usersFollowingUser(with: current.id, queue: DispatchQueue.global()) { (following) in
-        //            guard following != nil else {return}
-        //            DispatchQueue.main.async {
-        //                self.following = following ?? []
-        //                print(self.following.count)
-        //            }
-        //        }
-        
     }
-    
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        feedCollectionView.reloadData()
-    //    }
 }
 
 
@@ -157,74 +139,60 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout, CellDelegate {
     
     // MARK: - didTap on Likes (Переход по тапу на кол-во Лайков)
     func didTapOnLikes(in cell: UICollectionViewCell, currentPost: Post) {
-        
-        post.usersLikedPost(with: currentPost.id, queue: DispatchQueue.global(), handler: { (array) in
+        //Удаляем прежде загруженных пользователей с прошлой публикации
+        self.unwrapdeArrayOfLikesByUsers.removeAll()
+        post.usersLikedPost(with: currentPost.id, queue: DispatchQueue.global()) { (array) in
             guard array != nil else {return}
+            
             DispatchQueue.main.async {
-                usersLikesPostArray = array ?? []
-            }
-        })
-        var unwrapdeArrayOfLikesByUsers = [User]()
-        //Вытаскиваем искомого юзера
-        for userID in usersLikesPostArray {
-            user.user(with: userID.id, queue: DispatchQueue.global(), handler: { (gettingingUser) in
-                guard gettingingUser != nil else {return}
-                DispatchQueue.main.async {
-                    lookingUser = gettingingUser
-                }
-            })
-            if let lookingUser = lookingUser {
-                unwrapdeArrayOfLikesByUsers.append(lookingUser)
+               self.unwrapdeArrayOfLikesByUsers = array ?? []
+                 self.getLikes()
             }
         }
-        
-        //        if currentPost.currentUserLikesThisPost == true {
-        //            unwrapdeArrayOfLikesByUsers.append(currentUser)
-        //        }
-        
+    }
+    //Функция для перехода на списсок юзеров поставивших лайк
+    func getLikes() {
         if #available(iOS 13.0, *) {
-            guard let friendViewController = storyboard?.instantiateViewController(identifier: "FollowedByUser") as? FollowedByUser else { return }
-            friendViewController.mainTitle = "Likes"
-            friendViewController.friends = unwrapdeArrayOfLikesByUsers
-            self.show(friendViewController, sender: self)
-        } else {
-            print("ERRoR")
+            guard let friendViewController = self.storyboard?.instantiateViewController(identifier: "FollowedByUser") as? FollowedByUser else { return }
+            DispatchQueue.global().async {
+                friendViewController.mainTitle = "Likes"
+                friendViewController.friends = self.unwrapdeArrayOfLikesByUsers
+                
+                DispatchQueue.main.async {
+                    
+                    self.show(friendViewController, sender: self)
+                }
+            }
         }
     }
     
-    
-    
     // MARK: - didTap on Avatar (Переход по тапу на Аватар/Имя)
     func didTap(OnAvatarIn cell: UICollectionViewCell, currentPost: Post) {
-        //вытаскиваем текущего пользователя
-
+        var changeFollow = ""
         //Вытаскиваем follwed
         guard let current = curUser else {return}
         user.usersFollowedByUser(with: current.id, queue: DispatchQueue.global()) { (followers) in
             guard followers != nil else {return}
+            self.follwed = followers ?? []
+            for user in self.follwed {
+                if user.id == currentPost.author {
+                    self.userOfCurrentPost = user
+                    changeFollow = "Unfollow"
+                }
+            }
             DispatchQueue.main.async {
-                self.follwed = followers ?? []
-                print("1")
-                for user in self.follwed {
-                    if user.id == currentPost.author {
-                        self.userOfCurrentPost = user
-                        
-                        if #available(iOS 13.0, *) {
-                            guard let secondViewController = self.storyboard?.instantiateViewController(identifier: "FriendViewController") as? FriendViewController else { return }
-                            //            print(following.count, follwed.count)
-                            secondViewController.currentFriend = self.userOfCurrentPost
-                            secondViewController.invisibleView.isHidden = true
-                            self.show(secondViewController, sender: self)
-                        } else {
-                            print("ERRoR")
-                        }
-                        
-                    }
+                if #available(iOS 13.0, *) {
+                    guard let secondViewController = self.storyboard?.instantiateViewController(identifier: "FriendViewController") as? FriendViewController else { return }
+                    
+                    secondViewController.lebleOfFollowButton = changeFollow
+                    secondViewController.currentFriend = self.userOfCurrentPost
+                    self.show(secondViewController, sender: self)
                 }
             }
         }
     }
     
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let size = CGSize(width: UIScreen.main.bounds.size.width/1.0, height: 600)

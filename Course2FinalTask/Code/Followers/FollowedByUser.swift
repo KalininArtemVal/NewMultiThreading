@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 import DataProvider
 
-//MARK: - Followed/Following (Подписки/Подписчики Текущего пользователя)
-
-
 
 //MARK: - Table View (Таблица)
 class FollowedByUser: UIViewController {
@@ -30,7 +27,6 @@ class FollowedByUser: UIViewController {
         super.viewDidLoad()
 //        indicator()
         getFriends()
-        print(friendsWithOutNill.count)
         title = mainTitle
         tableView.delegate = self
         tableView.dataSource = self
@@ -39,8 +35,8 @@ class FollowedByUser: UIViewController {
     func getFriends() {
         guard self.friends != nil else {return}
         self.friendsWithOutNill = self.friends ?? []
-//        self.invisibleView.isHidden = true
         self.tableView.reloadData()
+//        self.invisibleView.isHidden = true
     }
     
     func indicator() {
@@ -57,9 +53,6 @@ class FollowedByUser: UIViewController {
 extension FollowedByUser: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let friends = friends else {return 0}
-//        invisibleView.isHidden = true
-//        tableView.reloadData()
         return friendsWithOutNill.count
     }
     

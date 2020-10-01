@@ -33,7 +33,7 @@ class ProfileViewController: UIViewController {
     var followingThisUser = [User]()
     var followedByThisUser = [User]()
     
-
+    
     
     func setArrayOfCurrentPost() {
         if let asyncCurrentUser = asyncCurrentUser {
@@ -48,7 +48,7 @@ class ProfileViewController: UIViewController {
     }
     
     var arrayOfCurrentPostUnwrapped = [Post]()
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,8 +77,7 @@ class ProfileViewController: UIViewController {
         user.currentUser(queue: DispatchQueue.global()) { (user) in
             guard user != nil else {return}
             DispatchQueue.main.async {
-                self.invisibleView.isHidden = true
-                self.activityIndicatorCurrent.stopAnimating()
+                
                 asyncCurrentUser = user
                 if let newMan = asyncCurrentUser {
                     self.imageLable.image = newMan.avatar
@@ -90,8 +89,10 @@ class ProfileViewController: UIViewController {
                     self.countOfFollowing.text = String(followedBy)
                     self.setArrayOfCurrentPost()
                     self.getFollowers()
+                    
                 }
             }
+            
         }
     }
     
@@ -103,6 +104,8 @@ class ProfileViewController: UIViewController {
             DispatchQueue.main.async {
                 self.followedByThisUser = users ?? []
                 followedByUser = users ?? []
+                self.invisibleView.isHidden = true
+                self.activityIndicatorCurrent.stopAnimating()
                 return
             }
         }
@@ -157,18 +160,12 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "profileCell", for: indexPath) as? NewProfileCollectionViewCell else {fatalError("hogeCell not registered.")}
-        for post in postsOfCurrentUser {
-            arrayOfCurrentPostUnwrapped.append(post)
-            let post = arrayOfCurrentPostUnwrapped[indexPath.row]
-            cell.configue(with: post.image)
-            return cell
-        }
-        let post = arrayOfCurrentPostUnwrapped[indexPath.row]
+        let post = postsOfCurrentUser[indexPath.row]
         cell.configue(with: post.image)
         return cell
     }
     
-
+    
 }
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {

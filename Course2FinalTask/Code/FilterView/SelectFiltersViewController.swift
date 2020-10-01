@@ -62,14 +62,6 @@ class SelectFiltersViewController: UIViewController {
         userImage.image = selectedImage
         userImage.contentMode = .scaleAspectFill
     }
-    
-//    func findImage() {
-//        for i in thumbnailPhotos {
-//            if i == selectedImage {
-//                print("Find")
-//            }
-//        }
-//    }
 }
 
 extension SelectFiltersViewController: UICollectionViewDelegate, UICollectionViewDataSource {

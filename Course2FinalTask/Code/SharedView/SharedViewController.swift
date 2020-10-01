@@ -38,13 +38,12 @@ class SharedViewController: UIViewController {
         sharedTextField.text = ""
         dismiss(animated: true, completion: nil)
         
+        post.newPost(with: sharedImage, description: sharedTextField.text ?? "", queue: DispatchQueue.global()) { (_) in  }
+        print("опубликовал")
         
-        post.newPost(with: sharedImage, description: sharedTextField.text ?? "", queue: DispatchQueue.global()) { (post) in
-            guard post != nil else {return}
-            DispatchQueue.main.async {
-                self.sharedPost = post
-            }
-        }
-        
+        let alertController = UIAlertController(title: "Пост опубликован", message: "Вы можете его найти в своих публикациях", preferredStyle: .actionSheet)
+        let action = UIAlertAction(title: "OK", style: .default)
+        alertController.addAction(action)
+        self.present(alertController, animated: true, completion: nil)
     }
 }
