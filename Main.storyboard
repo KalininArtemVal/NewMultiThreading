@@ -269,7 +269,7 @@
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9dG-my-Cp9">
                                 <rect key="frame" x="315.5" y="96" width="82.5" height="30"/>
-                                <color key="tintColor" red="0.93333597720000006" green="0.93333597720000006" blue="0.93333597720000006" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Button">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -277,12 +277,20 @@
                                     <action selector="followButton:" destination="35m-cl-f69" eventType="touchUpInside" id="P2k-7x-1bV"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="t7V-Yp-A5X">
+                                <rect key="frame" x="347" y="101" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="IpF-h1-5rD"/>
+                                    <constraint firstAttribute="height" constant="20" id="WN5-YS-3uI"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="9dG-my-Cp9" firstAttribute="top" secondItem="4Jj-tn-1gy" secondAttribute="top" constant="8" id="3wK-B3-ojw"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="trailing" secondItem="4Jj-tn-1gy" secondAttribute="trailing" id="4XC-bi-J4z"/>
                             <constraint firstAttribute="bottom" secondItem="LdI-Ck-YCu" secondAttribute="bottom" id="Rsu-ca-UjB"/>
+                            <constraint firstItem="t7V-Yp-A5X" firstAttribute="centerX" secondItem="9dG-my-Cp9" secondAttribute="centerX" id="Wet-pe-32s"/>
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="leading" secondItem="4Jj-tn-1gy" secondAttribute="leading" id="XL9-Hl-Fji"/>
                             <constraint firstItem="AdD-MZ-JJY" firstAttribute="top" secondItem="4Jj-tn-1gy" secondAttribute="top" constant="8" id="ZmS-Ib-YeC"/>
                             <constraint firstItem="4Jj-tn-1gy" firstAttribute="trailing" secondItem="t04-9x-HCb" secondAttribute="trailing" constant="16" id="aJQ-Wx-X1o"/>
@@ -294,6 +302,7 @@
                             <constraint firstItem="LdI-Ck-YCu" firstAttribute="top" secondItem="iYs-fR-s8b" secondAttribute="bottom" constant="8" id="ouv-b5-zBp"/>
                             <constraint firstItem="4Jj-tn-1gy" firstAttribute="trailing" secondItem="9dG-my-Cp9" secondAttribute="trailing" constant="16" id="pD1-nq-KzJ"/>
                             <constraint firstItem="iYs-fR-s8b" firstAttribute="leading" secondItem="4Jj-tn-1gy" secondAttribute="leading" constant="8" id="pso-ya-kow"/>
+                            <constraint firstItem="t7V-Yp-A5X" firstAttribute="centerY" secondItem="9dG-my-Cp9" secondAttribute="centerY" id="qu1-Wb-EYo"/>
                             <constraint firstItem="9dG-my-Cp9" firstAttribute="top" secondItem="iYs-fR-s8b" secondAttribute="top" id="vKl-pZ-BTb"/>
                             <constraint firstItem="cYY-tR-z87" firstAttribute="leading" secondItem="iYs-fR-s8b" secondAttribute="trailing" constant="8" id="vxf-Gv-gj5"/>
                         </constraints>
@@ -301,6 +310,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="useName" id="dX5-ON-QGX"/>
                     <connections>
+                        <outlet property="buttonActiveIndicator" destination="t7V-Yp-A5X" id="g9Z-OY-LZm"/>
                         <outlet property="followButtonLable" destination="9dG-my-Cp9" id="KZd-Ce-64x"/>
                         <outlet property="friendAvatar" destination="iYs-fR-s8b" id="bPT-fo-s8Y"/>
                         <outlet property="friendCollectionView" destination="LdI-Ck-YCu" id="qjg-5J-v4X"/>
@@ -632,7 +642,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="coc-l4-3Ol"/>
-        <segue reference="NfC-oB-lsA"/>
+        <segue reference="Wk0-ct-mti"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="feed" width="25" height="25"/>
