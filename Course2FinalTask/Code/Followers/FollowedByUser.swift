@@ -32,6 +32,11 @@ class FollowedByUser: UIViewController {
         tableView.dataSource = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        getFriends()
+        tableView.reloadData()
+    }
+    
     func getFriends() {
         guard self.friends != nil else {return}
         self.friendsWithOutNill = self.friends ?? []

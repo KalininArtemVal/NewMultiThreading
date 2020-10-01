@@ -43,7 +43,6 @@ class FriendViewController: UIViewController {
         setLayout()
         getFriend()
         indicator()
-        //        setFollowButton()
         friendCollectionView.reloadData()
         friendCollectionView.delegate = self
         friendCollectionView.dataSource = self
@@ -59,6 +58,8 @@ class FriendViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         friendCollectionView.reloadData()
+        setUser()
+        setFollowButton()
     }
     
     @objc func tapFollowers(sender: UITapGestureRecognizer) {
@@ -102,9 +103,11 @@ class FriendViewController: UIViewController {
         followButtonLable.backgroundColor = #colorLiteral(red: 0, green: 0.5882352941, blue: 1, alpha: 1)
         followButtonLable.layer.cornerRadius = 6
         followButtonLable.setTitle(lebleOfFollowButton, for: .normal)
+        
+        guard let currentUser = currentUser else {return}
         if let friend = currentFriend {
-            print(friend.currentUserFollowsThisUser)
             
+            print(friend.currentUserFollowsThisUser)
             if friend.currentUserFollowsThisUser == true {
                 followButtonLable.setTitle("UnFollow", for: .normal)
             } else {

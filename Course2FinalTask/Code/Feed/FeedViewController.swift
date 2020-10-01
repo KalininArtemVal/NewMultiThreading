@@ -49,6 +49,11 @@ class FeedViewController: UIViewController, UIGestureRecognizerDelegate {
         feedCollectionView.reloadData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        getFeed()
+        feedCollectionView.reloadData()
+    }
+    
     
     //вытаскиваем данные
     func getFeed() {
@@ -159,7 +164,6 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout, CellDelegate {
                 friendViewController.friends = self.unwrapdeArrayOfLikesByUsers
                 
                 DispatchQueue.main.async {
-                    
                     self.show(friendViewController, sender: self)
                 }
             }

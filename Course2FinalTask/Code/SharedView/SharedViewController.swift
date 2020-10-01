@@ -13,11 +13,14 @@ class SharedViewController: UIViewController {
     
     @IBOutlet weak var sharedImageView: UIImageView!
     @IBOutlet weak var sharedTextField: UITextField!
+    @IBOutlet weak var sharedLable: UIBarButtonItem!
+    
     
     static let identifire = "SharedViewController"
     
     var sharedImage = UIImage()
     var sharedPost: Post?
+    var descriptionText = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,18 +29,16 @@ class SharedViewController: UIViewController {
     
     func setSharedImage() {
         sharedImageView.image = sharedImage
-        
     }
     
     @IBAction func unwindToFeed( _ sender: UIStoryboardSegue) {
         print("Goo")
+        
     }
     
     @IBAction func shredButton(_ sender: Any) {
-        print("hhh")
-        sharedTextField.text = ""
-        dismiss(animated: true, completion: nil)
-        
+        descriptionText = sharedTextField.text ?? ""
+        print(descriptionText)
         post.newPost(with: sharedImage, description: sharedTextField.text ?? "", queue: DispatchQueue.global()) { (_) in  }
         print("опубликовал")
         
@@ -45,5 +46,7 @@ class SharedViewController: UIViewController {
         let action = UIAlertAction(title: "OK", style: .default)
         alertController.addAction(action)
         self.present(alertController, animated: true, completion: nil)
+        
+        sharedTextField.text = ""
     }
 }

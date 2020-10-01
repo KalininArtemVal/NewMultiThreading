@@ -42,6 +42,8 @@ class FeedCollectionViewCell: UICollectionViewCell {
         setTaps()
     }
     
+    
+    
     // MARK: - Set Tap Recognizer
     func setTaps() {
         //Тап на количество лайков
@@ -89,17 +91,21 @@ class FeedCollectionViewCell: UICollectionViewCell {
             currentPost?.currentUserLikesThisPost = true
             imageHeartOfLike.image = #imageLiteral(resourceName: "like")
             imageHeartOfLike.tintColor = .systemBlue
-            countLike += voice
+//            countLike += voice
             countOfLikes?.text = String(countLike)
             currentPost?.likedByCount = countLike
+            guard let currentPost = currentPost else {return}
+            post.likePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
         } else {
             currentPost?.currentUserLikesThisPost = false
             imageHeartOfLike.image = #imageLiteral(resourceName: "like")
             imageHeartOfLike.tintColor = .lightGray
-            countLike -= voice
+//            countLike -= voice
             currentPost?.likedByCount = countLike
             countOfLikes?.text = String(countLike)
             print("Unliked post")
+            guard let currentPost = currentPost else {return}
+            post.unlikePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
         }
     }
     

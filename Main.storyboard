@@ -569,7 +569,7 @@
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oWH-hS-D7Y">
                                 <rect key="frame" x="302" y="7" width="92" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Share"/>
                                 <connections>
                                     <action selector="shredButton:" destination="xIq-Pl-so9" eventType="touchUpInside" id="CrL-DS-JUp"/>
                                     <action selector="unwindToFeed:" destination="xIq-Pl-so9" eventType="touchUpInside" id="B5I-7z-tWR"/>
@@ -582,6 +582,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="sharedImageView" destination="2PL-Hz-Ag5" id="yEU-sB-fMP"/>
+                        <outlet property="sharedLable" destination="MgK-F4-JCB" id="oba-cu-1by"/>
                         <outlet property="sharedTextField" destination="Drn-5E-jWf" id="HA5-Eb-Z9O"/>
                     </connections>
                 </viewController>

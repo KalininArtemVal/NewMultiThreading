@@ -73,6 +73,8 @@ class ProfileViewController: UIViewController {
         invisibleView.addSubview(activityIndicatorCurrent)
     }
     
+    
+    
     private func setCurrentUser() {
         user.currentUser(queue: DispatchQueue.global()) { (user) in
             guard user != nil else {return}
@@ -141,6 +143,7 @@ class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
+        setCurrentUser()
     }
     
     func setLayout() {
