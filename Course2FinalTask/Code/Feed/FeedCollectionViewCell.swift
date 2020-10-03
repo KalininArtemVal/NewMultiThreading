@@ -13,6 +13,7 @@ import DataProvider
 protocol CellDelegate: UIViewController {
     func didTap(OnAvatarIn cell: UICollectionViewCell, currentPost: Post)
     func didTapOnLikes(in cell: UICollectionViewCell, currentPost: Post)
+    func updateFeed()
 }
 
 
@@ -83,33 +84,37 @@ class FeedCollectionViewCell: UICollectionViewCell {
         delegate?.didTapOnLikes(in: vc, currentPost: currentPost)
     }
     
-    //функция тап на сердечко
+    //Тап на маленькое сердечко
     @objc func tapHeart(sender: UITapGestureRecognizer) {
-        let voice = 1
-        guard var countLike = currentPost?.likedByCount else {return}
-        if currentPost?.currentUserLikesThisPost == false {
-            currentPost?.currentUserLikesThisPost = true
-            imageHeartOfLike.image = #imageLiteral(resourceName: "like")
-            imageHeartOfLike.tintColor = .systemBlue
-//            countLike += voice
-            countOfLikes?.text = String(countLike)
-            currentPost?.likedByCount = countLike
-            guard let currentPost = currentPost else {return}
-            post.likePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
-        } else {
-            currentPost?.currentUserLikesThisPost = false
-            imageHeartOfLike.image = #imageLiteral(resourceName: "like")
-            imageHeartOfLike.tintColor = .lightGray
-//            countLike -= voice
-            currentPost?.likedByCount = countLike
-            countOfLikes?.text = String(countLike)
-            print("Unliked post")
-            guard let currentPost = currentPost else {return}
-            post.unlikePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
+            guard let countLike = self.currentPost?.likedByCount else {return}
+            if self.currentPost?.currentUserLikesThisPost == false {
+                guard let currentPost = self.currentPost else {return}
+                post.likePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
+                DispatchQueue.main.async {
+                    print("liked post")
+                    self.countOfLikes?.text = String(countLike)
+                    self.imageHeartOfLike.image = #imageLiteral(resourceName: "like")
+                    self.imageHeartOfLike.tintColor = .systemBlue
+                    self.currentPost?.likedByCount = countLike
+                    self.currentPost?.currentUserLikesThisPost = true
+                    self.delegate?.updateFeed()
+                }
+            } else {
+                guard let currentPost = self.currentPost else {return}
+                post.unlikePost(with: currentPost.id, queue: DispatchQueue.global()) { (_) in }
+                DispatchQueue.main.async {
+                    print("Unliked post")
+                    self.imageHeartOfLike.image = #imageLiteral(resourceName: "like")
+                    self.imageHeartOfLike.tintColor = .lightGray
+                    self.countOfLikes?.text = String(countLike)
+                    self.currentPost?.currentUserLikesThisPost = false
+                    self.currentPost?.likedByCount = countLike
+                    self.delegate?.updateFeed()
+                }
+            }
         }
-    }
     
-    //функция тап на Аватар
+    //Тап на Аватар
     @objc func tapAvatar(sender: UITapGestureRecognizer) {
         let vc = FeedCollectionViewCell()
         guard let currentPost = currentPost else {return}
@@ -130,7 +135,7 @@ class FeedCollectionViewCell: UICollectionViewCell {
             countOfLikes?.text = String(countLike)
             
             let animation = CAKeyframeAnimation(keyPath: "opacity")
-            animation.values = [0.0, 1.0, 1.0, 0.0]//.map { NSNumber(value: $0) }
+            animation.values = [0.0, 1.0, 1.0, 0.0]
             animation.keyTimes = [0.0, 0.1, 0.3, 0.6]
             animation.duration = 0.6
             animation.timingFunctions = [
@@ -140,6 +145,8 @@ class FeedCollectionViewCell: UICollectionViewCell {
                         ]
             bigHeart.layer.add(animation, forKey: nil)
             bigHeart.layer.opacity = 0.0
+            self.setTaps()
+            self.delegate?.updateFeed()
         }
     }
     

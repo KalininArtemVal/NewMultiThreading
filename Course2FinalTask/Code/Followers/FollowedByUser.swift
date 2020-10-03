@@ -25,7 +25,7 @@ class FollowedByUser: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        indicator()
+        indicator()
         getFriends()
         title = mainTitle
         tableView.delegate = self
@@ -33,6 +33,7 @@ class FollowedByUser: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        invisibleView.isHidden = true
         getFriends()
         tableView.reloadData()
     }

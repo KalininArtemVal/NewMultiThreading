@@ -10,7 +10,7 @@ import UIKit
 import DataProvider
 
 
-
+//MARK: - Экран с коллекцией фотографий пользователя
 class SelectFiltersViewController: UIViewController {
     
     @IBOutlet weak var userImage: UIImageView!
@@ -30,7 +30,6 @@ class SelectFiltersViewController: UIViewController {
         indicator()
         setImage()
         setLayout()
-//        findImage()
         collectionView.register(FilterCollectionViewCell.nib(), forCellWithReuseIdentifier: FilterCollectionViewCell.identifire)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -38,6 +37,7 @@ class SelectFiltersViewController: UIViewController {
     }
     
     func indicator() {
+        invisibleView.contentMode = .scaleAspectFit
         invisibleView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         invisibleView.backgroundColor = .black
         invisibleView.alpha = 0.7

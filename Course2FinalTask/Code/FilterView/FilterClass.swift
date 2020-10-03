@@ -9,7 +9,7 @@
 import UIKit
 import DataProvider
 
-//MARK: - Класс фильтров
+//MARK: - Класс обработки фильтров
 class UseFilter: Operation {
     
     override var isAsynchronous: Bool {
@@ -36,8 +36,6 @@ class UseFilter: Operation {
 
 
 let queue = OperationQueue()
-
-//let queue2 = OperationQueue()
 
 var newImage1 = UIImage()
 var newImage2 = UIImage()

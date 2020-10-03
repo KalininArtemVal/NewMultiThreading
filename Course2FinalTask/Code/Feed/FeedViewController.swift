@@ -142,6 +142,19 @@ extension FeedViewController: UICollectionViewDataSource, UICollectionViewDelega
 
 extension FeedViewController: UICollectionViewDelegateFlowLayout, CellDelegate {
     
+    // MARK: - Обновляем ленту
+    func updateFeed() {
+        DispatchQueue.global().async {
+            self.getUser()
+            self.getFeed()
+            DispatchQueue.main.async {
+                self.feedCollectionView.reloadData()
+            }
+        }
+        
+    }
+    
+    
     // MARK: - didTap on Likes (Переход по тапу на кол-во Лайков)
     func didTapOnLikes(in cell: UICollectionViewCell, currentPost: Post) {
         //Удаляем прежде загруженных пользователей с прошлой публикации
@@ -150,8 +163,10 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout, CellDelegate {
             guard array != nil else {return}
             
             DispatchQueue.main.async {
-               self.unwrapdeArrayOfLikesByUsers = array ?? []
-                 self.getLikes()
+                self.unwrapdeArrayOfLikesByUsers = array ?? []
+                self.getLikes()
+                self.feedCollectionView.reloadData()
+                
             }
         }
     }

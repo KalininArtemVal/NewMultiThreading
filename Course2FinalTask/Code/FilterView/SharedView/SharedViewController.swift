@@ -1,11 +1,10 @@
 //
-//  SharedViewController.swift
+//  ShareViewController.swift
 //  Course2FinalTask
 //
-//  Created by Калинин Артем Валериевич on 27.09.2020.
+//  Created by Калинин Артем Валериевич on 02.10.2020.
 //  Copyright © 2020 e-Legion. All rights reserved.
 //
-
 import UIKit
 import DataProvider
 

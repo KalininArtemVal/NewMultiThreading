@@ -28,15 +28,13 @@ class FriendViewController: UIViewController {
     
     
     var friendIndicator = UIActivityIndicatorView()
-//    var buttonIndicator = UIActivityIndicatorView()
     var invisibleView = UIView()
-    var lebleOfFollowButton = "1"
+    var lebleOfFollowButton = ""
     
     var currentUser: User?
     var currentFriend: User?
+    var gettingFriend: User?
     var unwrappedArrayOfFriendPost = [Post]()
-    
-    static let identifire = "FriendViewController"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,28 +56,36 @@ class FriendViewController: UIViewController {
         self.view.frame = rect
     }
     
+    //Обновляем UI
     override func viewWillAppear(_ animated: Bool) {
         friendCollectionView.reloadData()
-        setUser()
-        setFollowButton()
     }
     
     @objc func tapFollowers(sender: UITapGestureRecognizer) {
         let vc = FollowedByUser()
         show(vc, sender: self)
     }
+    
     // Устанавливаем Юзера на View
     func setUser() {
         guard let friend = currentFriend else {return}
-        friendAvatar.image = friend.avatar
-        friendAvatar.layer.cornerRadius = friendAvatar.frame.size.width / 2
-        friendUserName.text = friend.fullName
-        friendFollowersCount.text = String(friend.followedByCount)
-        friendFollowingCount.text = String(friend.followsCount)
-        title = friend.username
-        getFollower()
-        setFollowButton()
-        getFriend()
+        user.user(with: friend.id, queue: DispatchQueue.global()) { (user) in
+            guard user != nil else {return}
+            self.getFollower()
+            self.getFriend()
+            DispatchQueue.main.async {
+                self.gettingFriend = user
+                guard let getFriend = self.gettingFriend else {return}
+                self.friendAvatar.image = getFriend.avatar
+                self.friendAvatar.layer.cornerRadius = self.friendAvatar.frame.size.width / 2
+                self.friendUserName.text = getFriend.fullName
+                self.friendFollowersCount.text = String(getFriend.followedByCount)
+                print(getFriend.followedByCount,getFriend.followsCount)
+                self.friendFollowingCount.text = String(getFriend.followsCount)
+                self.title = getFriend.username
+                self.setFollowButton()
+            }
+        }
     }
     
     func setLayout() {
@@ -100,11 +106,11 @@ class FriendViewController: UIViewController {
         view.addSubview(invisibleView)
     }
     
+    //Устанавливаем КНОПКУ Follow/UnFollow
     func setFollowButton() {
         followButtonLable.backgroundColor = #colorLiteral(red: 0, green: 0.5882352941, blue: 1, alpha: 1)
         followButtonLable.layer.cornerRadius = 6
         followButtonLable.setTitle(lebleOfFollowButton, for: .normal)
-        
         if let friend = currentFriend {
             if friend.currentUserFollowsThisUser == true {
                 followButtonLable.setTitle("UnFollow", for: .normal)
@@ -114,6 +120,7 @@ class FriendViewController: UIViewController {
         }
     }
     
+    //Получаем подписчиков ДРУГА
     func getFollower() {
         guard let friend = currentFriend else {return}
         user.usersFollowedByUser(with: friend.id, queue: DispatchQueue.global()) { (followers) in
@@ -147,7 +154,6 @@ class FriendViewController: UIViewController {
     }
     
     //MARK: - FINDPOST
-    
     //функция где мы достаем из DataProvider посты для ДРУГА
     func getFriend() {
         if let currentFriend = currentFriend {
@@ -176,36 +182,56 @@ class FriendViewController: UIViewController {
         }
     }
     
-    
+    //MARK: - КНОПКА FOLLOW
     @IBAction func followButton(_ sender: Any) {
+        
         self.buttonActiveIndicator.isHidden = false
         self.buttonActiveIndicator.startAnimating()
         self.followButtonLable.setTitle("", for: .normal)
         guard let current = currentFriend else {return}
         if followButtonLable.titleLabel?.text == "Follow" {
-            
-            print("Aga")
             user.follow(current.id, queue: DispatchQueue.global()) { (_) in
                 DispatchQueue.main.async {
-                    self.followButtonLable.setTitle("Unfollow", for: .normal)
+                    self.lebleOfFollowButton = "Unfollow"
+                    self.followButtonLable.setTitle(self.lebleOfFollowButton, for: .normal)
                     self.buttonActiveIndicator.isHidden = true
                     self.buttonActiveIndicator.stopAnimating()
-                    print("подписаться")
+                    self.updateUI()
+                    print("Подписался")
                 }
             }
         } else {
-            print("Net")
             user.unfollow(current.id, queue: DispatchQueue.global()) { (_) in
                 DispatchQueue.main.async {
-                    self.followButtonLable.setTitle("Follow", for: .normal)
+                    self.lebleOfFollowButton = "Follow"
+                    self.followButtonLable.setTitle(self.lebleOfFollowButton, for: .normal)
                     self.buttonActiveIndicator.isHidden = true
                     self.buttonActiveIndicator.stopAnimating()
-                    print("отписаться")
+                    self.updateUI()
+                    print("Отписался")
                 }
             }
         }
     }
+    //обновляем UI интерфйес после того как текущий пользователь подписался/отписался
+    func updateUI() {
+        guard let friend = currentFriend else {return}
+        user.user(with: friend.id, queue: DispatchQueue.global()) { (user) in
+            guard user != nil else {return}
+            DispatchQueue.main.async {
+                self.gettingFriend = user
+                guard let getFriend = self.gettingFriend else {return}
+                self.friendFollowersCount.text = String(getFriend.followedByCount)
+                self.friendFollowingCount.text = String(getFriend.followsCount)
+                self.title = getFriend.username
+                self.getFollower()
+                self.getFriend()
+            }
+        }
+    }
     
+    
+    //Индикатор для кнопки Follow
     func indicatorOfButton() {
         buttonActiveIndicator.isHidden = true
         buttonActiveIndicator.color = .white
